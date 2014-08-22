@@ -33,6 +33,12 @@ module Asciidoctor
         end
       end
 
+      def self.included(mod)
+        mod.register_format(:png, :image) do |c, p|
+          Cacoo.get_diagram(c.to_s, c.api_key)
+        end
+      end
+
       class Source < API::FileSource
         attr_accessor :diagram_id
         attr_accessor :api_key
@@ -64,17 +70,21 @@ module Asciidoctor
       end
     end
 
-    class Asciidoctor::Diagram::CacooBlockProcessor < API::DiagramBlockProcessor
+    class CacooBlockProcessor < API::DiagramBlockProcessor
       include Cacoo
+
+      def create_source(parent, reader, attributes)
+        api_key = ENV['CACOO_API_KEY'] || parent.document.attributes['cacoo_api_key']
+        raise "Please specify your Cacoo API key using the CACOO_API_KEY environment variable or cacoo_api_key document attribute" unless api_key
+        Cacoo::Source.new(reader.read.strip, api_key)
+      end
     end
 
     class CacooBlockMacroProcessor < API::DiagramBlockMacroProcessor
-      register_format(:png, :image) do |parent, source|
-        Cacoo.cacoo(source.code, source.api_key)
-      end
+      include Cacoo
 
       def create_source(parent, target, attributes)
-        api_key = ENV['CACOO_API_KEY'] || parent.document.attributes('cacoo_api_key')
+        api_key = ENV['CACOO_API_KEY'] || parent.document.attributes['cacoo_api_key']
         raise "Please specify your Cacoo API key using the CACOO_API_KEY environment variable or cacoo_api_key document attribute" unless api_key
         Cacoo::Source.new(target.strip, api_key)
       end
