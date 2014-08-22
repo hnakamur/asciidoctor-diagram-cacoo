@@ -33,7 +33,7 @@ module Asciidoctor
         end
       end
 
-      class Source < API::DiagramSource
+      class Source < API::FileSource
         attr_accessor :diagram_id
         attr_accessor :api_key
 
