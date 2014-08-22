@@ -1,6 +1,6 @@
 require 'json'
 require 'time'
-require_relative '../api/diagram'
+require 'asciidoctor-diagram/api/diagram'
 
 module Asciidoctor
   module Diagram
@@ -62,6 +62,10 @@ module Asciidoctor
           Cacoo.get_diagram_metadata(diagram_id, api_key)
         end
       end
+    end
+
+    class Asciidoctor::Diagram::CacooBlockProcessor < API::DiagramBlockProcessor
+      include Cacoo
     end
 
     class CacooBlockMacroProcessor < API::DiagramBlockMacroProcessor
