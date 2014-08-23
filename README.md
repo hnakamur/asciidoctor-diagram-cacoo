@@ -36,17 +36,26 @@ your diagram ID is gJpqSQjwc7GFDAaI.
 You can add a diagram to your application, like the following example:
 
 ```
-["cacoo"]
+["cacoo", "_Your_diagram_ID_here_"]
 ---------------------------------------------------------------------
 _Your_diagram_ID_here_
 ---------------------------------------------------------------------
 ```
 
-You could load asciidoctor-diagram-cacoo (this gem) with the following command:
+You can load asciidoctor-diagram and asciidoctor-diagram-cacoo (this gem) with `-r` option
+of asciidoctor like below:
 
 ```
-$ asciidoctor -r asciidoctor-diagram-cacoo sample.adoc
+$ asciidoctor -r asciidoctor-diagram -r asciidoctor-diagram-cacoo sample.adoc
 ```
+
+For a complete example, see https://github.com/hnakamur/asciidoctor-diagram-cacoo-example
+
+## Credits
+
+[asciidoctor-diagram-cacoo/extension.rb]( https://github.com/hnakamur/asciidoctor-diagram-cacoo/blob/master/lib/asciidoctor-diagram-cacoo/extension.rb ) is based on https://gist.github.com/pepijnve/2d4059db5d827462b5cd by [pepijnve (Pepijn Van Eeckhoudt)]( https://github.com/pepijnve ).
+
+Thanks!
 
 ## Contributing
 
