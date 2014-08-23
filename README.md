@@ -18,8 +18,8 @@ Or install it yourself as:
 
 ## Usage
 
-You must have an account of https://cacoo.com/[Cacoo].
-You need to create an Caoo API Key at https://cacoo.com/profile/api[Cacoo API key config page]
+You must have an account of [Cacoo](https://cacoo.com/).
+You need to create an Caoo API Key at [Cacoo API key config page](https://cacoo.com/profile/api)
 and set it to the environment variable `CACOO_API_KEY`.
 
 If you use bash or zsh, you can set it like the following:
@@ -41,6 +41,8 @@ You can add a diagram to your application, like the following example:
 _Your_diagram_ID_here_
 ---------------------------------------------------------------------
 ```
+
+### Complete example
 
 You can load asciidoctor-diagram and asciidoctor-diagram-cacoo (this gem) with `-r` option
 of asciidoctor like below:
