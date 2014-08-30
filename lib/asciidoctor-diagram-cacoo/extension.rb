@@ -1,6 +1,6 @@
 require 'json'
 require 'time'
-require 'asciidoctor-diagram/api/diagram'
+require 'asciidoctor-diagram/extensions'
 
 module Asciidoctor
   module Diagram
@@ -39,7 +39,7 @@ module Asciidoctor
         end
       end
 
-      class Source < API::BasicSource
+      class Source < Extensions::BasicSource
         attr_accessor :diagram_id
         attr_accessor :api_key
 
@@ -70,7 +70,7 @@ module Asciidoctor
       end
     end
 
-    class CacooBlockProcessor < API::DiagramBlockProcessor
+    class CacooBlockProcessor < Extensions::DiagramBlockProcessor
       include Cacoo
 
       def create_source(parent, reader, attributes)
@@ -80,7 +80,7 @@ module Asciidoctor
       end
     end
 
-    class CacooBlockMacroProcessor < API::DiagramBlockMacroProcessor
+    class CacooBlockMacroProcessor < Extensions::DiagramBlockMacroProcessor
       include Cacoo
 
       def create_source(parent, target, attributes)
