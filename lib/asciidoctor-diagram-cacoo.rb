@@ -3,6 +3,6 @@ require 'asciidoctor/extensions'
 
 Asciidoctor::Extensions.register do
   require_relative 'asciidoctor-diagram-cacoo/extension'
-  block Asciidoctor::Diagram::CacooBlock, :cacoo
-  block_macro Asciidoctor::Diagram::CacooBlockMacro, :cacoo
+  block Asciidoctor::Diagram::CacooBlockProcessor, :cacoo
+  block_macro Asciidoctor::Diagram::CacooBlockMacroProcessor, :cacoo
 end
