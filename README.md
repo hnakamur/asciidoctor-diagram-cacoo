@@ -16,6 +16,10 @@ Or install it yourself as:
 
     $ gem install asciidoctor-diagram-cacoo
 
+If you enable downloading contents.xml for cacoo diagrams, you also need to install [Nokogiri](http://www.nokogiri.org/)
+
+    $ gem install nokogiri
+
 ## Usage
 
 You must have an account of [Cacoo](https://cacoo.com/).
@@ -40,6 +44,27 @@ acoo::f0MLos8tgXXxaTBv["png", alt="alt text"]
 ```
 
 ### Complete example
+
+sample.adoc
+
+```
+= asciidoctor-diagram-cacoo-example
+
+:cacoo_does_download_contents: true
+:cacoo_contents_xml_indent: 0
+
+.DiagramBlockProcessor class diagram
+cacoo::f0MLos8tgXXxaTBv["png", alt="DiagramBlockProcessor class"]
+
+.Source class diagram
+cacoo::Vsw9cGkj8bJjEBr6["png", alt="Source class"]
+```
+
+Optional asciidoc document attributes
+
+* cacoo_does_download_contents: true|false. Enable downlaoding contents.xml for cacoo diagrams. This is not needed to generate documents. However it is useful to see differences in diagrams if you put these contents.xml in version control system like git. Filename will be "cacoo-#{diagram_id}-contents.xml"
+* cacoo_contents_xml_indent: 0|2|4|0. Number of spaces for indent of contents.xml.
+
 
 You can load asciidoctor-diagram and asciidoctor-diagram-cacoo (this gem) with `-r` option
 of asciidoctor like below:

@@ -1,6 +1,7 @@
 require 'json'
 require 'time'
 require 'asciidoctor-diagram/extensions'
+require 'nokogiri'
 
 module Asciidoctor
   module Diagram
@@ -23,6 +24,19 @@ module Asciidoctor
         get("/api/v1/diagrams/#{diagram_id}.png?apiKey=#{api_key}")
       end
 
+      def self.get_diagram_contents(diagram_id, api_key)
+        # NOTE: See API document at https://cacoo.com/lang/en/api and
+        # https://cacoo.com/lang/en/api_diagram_contents
+        get("/api/v1/diagrams/#{diagram_id}/contents.xml?returnValues=textStyle,shapeStyle,uid,position,point&apiKey=#{api_key}")
+      end
+
+      def self.save_diagram_contents(filename, contents, indent)
+        doc = Nokogiri.XML(contents)
+        File.open(filename, 'w') do |f|
+          f.write doc.to_xml(indent: indent)
+        end
+      end
+
       def self.get(url)
         https = Net::HTTP.new('cacoo.com', 443)
         https.use_ssl = true
@@ -35,17 +49,23 @@ module Asciidoctor
 
       def self.included(mod)
         mod.register_format(:png, :image) do |c, p|
-          Cacoo.get_diagram(c.to_s, c.api_key)
+          if c.options[:does_download_contents]
+            contents = Cacoo.get_diagram_contents(c.diagram_id, c.api_key)
+            Cacoo.save_diagram_contents("#{c.image_name}-contents.xml", contents, c.options[:contents_xml_indent])
+          end
+          Cacoo.get_diagram(c.diagram_id, c.api_key)
         end
       end
 
       class Source < Extensions::BasicSource
         attr_accessor :diagram_id
         attr_accessor :api_key
+        attr_accessor :options
 
-        def initialize(diagram_id, api_key)
+        def initialize(diagram_id, api_key, options)
           @diagram_id = diagram_id
           @api_key = api_key
+          @options = options
         end
 
         def image_name
@@ -76,7 +96,13 @@ module Asciidoctor
       def create_source(parent, reader, attributes)
         api_key = ENV['CACOO_API_KEY'] || parent.document.attributes['cacoo_api_key']
         raise "Please specify your Cacoo API key using the CACOO_API_KEY environment variable or cacoo_api_key document attribute" unless api_key
-        Cacoo::Source.new(reader.read.strip, api_key)
+        does_download_contents = parent.document.attributes['cacoo_does_download_contents'] || false
+        contents_xml_indent = (parent.document.attributes['cacoo_contents_xml_indent'] || '2').to_i
+        options = {
+          does_download_contents: does_download_contents,
+          contents_xml_indent: contents_xml_indent
+        }
+        Cacoo::Source.new(reader.read.strip, api_key, options)
       end
     end
 
@@ -86,7 +112,13 @@ module Asciidoctor
       def create_source(parent, target, attributes)
         api_key = ENV['CACOO_API_KEY'] || parent.document.attributes['cacoo_api_key']
         raise "Please specify your Cacoo API key using the CACOO_API_KEY environment variable or cacoo_api_key document attribute" unless api_key
-        Cacoo::Source.new(target.strip, api_key)
+        does_download_contents = parent.document.attributes['cacoo_does_download_contents'] || false
+        contents_xml_indent = (parent.document.attributes['cacoo_contents_xml_indent'] || '2').to_i
+        options = {
+          does_download_contents: does_download_contents,
+          contents_xml_indent: contents_xml_indent
+        }
+        Cacoo::Source.new(target.strip, api_key, options)
       end
     end
   end
