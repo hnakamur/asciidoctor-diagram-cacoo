@@ -31,7 +31,7 @@ module Asciidoctor
       end
 
       def self.save_diagram_contents(filename, contents, indent)
-        doc = Nokogori.XML(contents)
+        doc = Nokogiri.XML(contents)
         File.open(filename, 'w') do |f|
           f.write doc.to_xml(indent: indent)
         end
@@ -99,7 +99,7 @@ module Asciidoctor
         does_download_contents = parent.document.attributes['cacoo_does_download_contents'] || false
         contents_xml_indent = (parent.document.attributes['cacoo_contents_xml_indent'] || '2').to_i
         options = {
-          does_download_contents: does_download_contents
+          does_download_contents: does_download_contents,
           contents_xml_indent: contents_xml_indent
         }
         Cacoo::Source.new(reader.read.strip, api_key, options)
@@ -115,7 +115,7 @@ module Asciidoctor
         does_download_contents = parent.document.attributes['cacoo_does_download_contents'] || false
         contents_xml_indent = (parent.document.attributes['cacoo_contents_xml_indent'] || '2').to_i
         options = {
-          does_download_contents: does_download_contents
+          does_download_contents: does_download_contents,
           contents_xml_indent: contents_xml_indent
         }
         Cacoo::Source.new(target.strip, api_key, options)
